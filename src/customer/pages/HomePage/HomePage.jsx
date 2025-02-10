@@ -14,7 +14,7 @@ const HomePage = () => {
         <HomeSectionCarousel />
         <HomeSectionCarousel />
       </div>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   )
 }
