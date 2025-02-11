@@ -70,30 +70,14 @@ export default function Product() {
     const query = searchParams.toString();
     navigate(`?${query}`);
   };
-  
 
+  const handleRadioFilterChange = (e,sectionId)=>{
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set(sectionId,e.target.value);
 
-  // const   handleFilter = (value,sectionId)=>{
-
-  //   const serachParams = new URLSearchParams(location.search);
-  //   let filterValue = serachParams.getAll(sectionId);
-
-  //   if(filterValue.length>0 && filterValue[0].split(",").includes(value)){
-  //       filterValue=filterValue[0].split(",").filter((item)=>item!==value);
-
-  //       if(filterValue.length===0){
-  //           serachParams.delete(sectionId);
-  //       }
-  //   }else{
-  //       filterValue.push(value)
-  //   }
-
-  //   if(filterValue.length>0){
-  //       serachParams.set(sectionId,filterValue.join(","))
-  //       const quer = serachParams.toString();
-  //       navigate({search:`?{query}`})
-  //   }
-  // }
+    const query = searchParams.toString();
+    navigate(`?${query}`);
+  }
 
   return (
     <div className="bg-white">
@@ -396,7 +380,8 @@ export default function Product() {
                               {section.options.map((option, optionIdx) => (
                                 <>
                                   <FormControlLabel
-                                    value={option.id}
+                                    onChange={(e)=>handleRadioFilterChange(e,section.id)}
+                                    value={option.value}
                                     control={<Radio />}
                                     label={option.label}
                                   />
