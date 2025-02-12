@@ -6,6 +6,7 @@ import HomePage from './customer/pages/HomePage/HomePage';
 import ProductCard from '../src/customer/components/Products/ProductCard.jsx'
 import Footer from './customer/components/Footer/Footer.jsx';
 import Product from './customer/components/Products/Product.jsx';
+import ProductDetails from './customer/components/ProductDetails/ProductDetails.jsx';
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Navigation />
       <div>
         {/* <HomePage /> */}
-        <Product />
+        {/* <Product /> */}
+        <ProductDetails />
       </div>
       <Footer />
     </div>
