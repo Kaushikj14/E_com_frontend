@@ -8,6 +8,7 @@ import Footer from './customer/components/Footer/Footer.jsx';
 import Product from './customer/components/Products/Product.jsx';
 import ProductDetails from './customer/components/ProductDetails/ProductDetails.jsx';
 import Cart from './customer/components/Cart/Cart.jsx';
+import Checkout from './customer/components/Checkout/checkout.jsx';
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         {/* <HomePage /> */}
         {/* <Product /> */}
         {/* <ProductDetails /> */}
-        <Cart />
+        {/* <Cart /> */}
+        <Checkout />
       </div>
       <Footer />
     </div>
