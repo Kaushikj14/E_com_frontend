@@ -7,6 +7,7 @@ import ProductCard from '../src/customer/components/Products/ProductCard.jsx'
 import Footer from './customer/components/Footer/Footer.jsx';
 import Product from './customer/components/Products/Product.jsx';
 import ProductDetails from './customer/components/ProductDetails/ProductDetails.jsx';
+import Cart from './customer/components/Cart/Cart.jsx';
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
       <div>
         {/* <HomePage /> */}
         {/* <Product /> */}
-        <ProductDetails />
+        {/* <ProductDetails /> */}
+        <Cart />
       </div>
       <Footer />
     </div>
