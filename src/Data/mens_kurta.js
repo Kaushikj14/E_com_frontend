@@ -1,4 +1,4 @@
-export const mens_kurta = [
+export  const mens_kurta = [
     {
       "imageUrl": "https://valintaformens.com/cdn/shop/products/photo_2023-03-27_02-27-21.jpg?v=1681723151&width=736",
       "brand": "SG LEMAN",
