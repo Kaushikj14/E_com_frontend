@@ -9,7 +9,8 @@ import Product from './customer/components/Products/Product.jsx';
 import ProductDetails from './customer/components/ProductDetails/ProductDetails.jsx';
 import Cart from './customer/components/Cart/Cart.jsx';
 import Checkout from './customer/components/Checkout/checkout.jsx';
-
+import Order from './customer/components/Order/Order.jsx';
+import OrderDetails from './customer/components/Order/OrderDetails.jsx';
 function App() {
   return (
     <div className="">
@@ -19,7 +20,9 @@ function App() {
         {/* <Product /> */}
         {/* <ProductDetails /> */}
         {/* <Cart /> */}
-        <Checkout />
+        {/* <Checkout /> */}
+        {/* <Order /> */}
+        <OrderDetails />
       </div>
       <Footer />
     </div>
