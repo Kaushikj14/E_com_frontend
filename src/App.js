@@ -11,20 +11,23 @@ import Cart from './customer/components/Cart/Cart.jsx';
 import Checkout from './customer/components/Checkout/checkout.jsx';
 import Order from './customer/components/Order/Order.jsx';
 import OrderDetails from './customer/components/Order/OrderDetails.jsx';
+import { Route, Routes } from 'react-router-dom';
+import CustomerRoutes from './Routers/CustomerRoutes.jsx';
 function App() {
   return (
     <div className="">
-      <Navigation />
+        <Navigation />
+      <Routes>
+      <Route path='/' element={<HomePage />}></Route>
+          <Route path='/cart' element={<Cart />}></Route>
+            <Route path='/:levelOne/:levelTwo/:levelThree' element={<Product />}></Route>
+            <Route path='/product/:productId' element={<ProductDetails />}></Route>
+
+
+      </Routes>
       <div>
-        {/* <HomePage /> */}
-        {/* <Product /> */}
-        {/* <ProductDetails /> */}
-        {/* <Cart /> */}
-        {/* <Checkout /> */}
-        {/* <Order /> */}
-        <OrderDetails />
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 }
