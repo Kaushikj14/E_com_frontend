@@ -20,6 +20,9 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import AuthModal from "../../Auth/AuthModal";
+import { Avatar,AvatarIcon,Menu,MenuButton } from "@mui/material";
 
 export const navigation = {
   categories: [
@@ -50,8 +53,8 @@ export const navigation = {
           name: "Clothing",
           items: [
             { id: "tops", name: "Tops", href: "#" },
-    { id: "dresses", name: "Dresses", href: "#" },
-    { id: "pants", name: "Pants", href: "#" },
+            { id: "dresses", name: "Dresses", href: "#" },
+            { id: "pants", name: "Pants", href: "#" },
             { name: "Denim", href: "#" },
             { name: "Sweaters", href: "#" },
             { name: "T-Shirts", href: "#" },
@@ -155,29 +158,27 @@ const Navigation = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-
-
-  const [openAuthModel, setOpenAuthModal] = useState(false);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
   const [anchorE1, setAnchorE1] = useState(null);
 
   const openUserMenu = Boolean(anchorE1);
   const jwt = localStorage.getItem("jwt");
 
   const handleUserClick = (event) => {
-      setAnchorE1(event.currentTarget);
-  }
+    setAnchorE1(event.currentTarget);
+  };
 
-  const handleCloseUserMenu = (event)=>{
+  const handleCloseUserMenu = (event) => {
     setAnchorE1(null);
-  }
+  };
 
-  const handleOpen = ()=>{
+  const handleOpen = () => {
     setOpenAuthModal(true);
-  }
+  };
 
-  const handleClose = ()=>{
+  const handleClose = () => {
     setOpenAuthModal(false);
-  }
+  };
   const closePanel = () => {
     // Your logic here
   };
@@ -291,12 +292,9 @@ const Navigation = () => {
             <div className="space-y-6 border-t border-gray-200 px-4 py-6">
               {navigation.pages.map((page) => (
                 <div key={page.name} className="flow-root">
-                  
-                    
                   <p className="-m-2 block p-2 font-medium text-gray-900">
                     {page.name}
                   </p>
-                  
                 </div>
               ))}
             </div>
@@ -360,14 +358,12 @@ const Navigation = () => {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-              
-                  <span className="sr-only">Your Company</span>
-                  <img
-                    alt=""
-                    src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                    className="h-8 w-auto"
-                  />
-                
+                <span className="sr-only">Your Company</span>
+                <img
+                  alt=""
+                  src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
+                  className="h-8 w-auto"
+                />
               </div>
 
               {/* Flyout menus */}
@@ -477,19 +473,46 @@ const Navigation = () => {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    Sign in
-                  </a>
-                  <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    Create account
-                  </a>
+                  {true ? (
+                    <Button
+                      onClick={handleOpen}
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    >
+                      Sign in
+                    </Button>
+                  ) : (
+                    <div>
+                      <Avatar>
+                        <AvatarIcon />{" "}
+                        {/* Assuming AvatarIcon is defined elsewhere */}
+                      </Avatar>
+                      <Menu>
+                        <MenuButton>
+                          <Button>Create account</Button>
+                        </MenuButton>
+                        {/* You can add more MenuItems here if needed */}
+                        {/* Example: 
+        <MenuItem>
+          <Button>Profile</Button>
+        </MenuItem>
+        <MenuItem>
+          <Button>Settings</Button>
+        </MenuItem> */}
+                      </Menu>
+                      {/* You can add other elements here as well, like a divider: */}
+                      {/* <span aria-hidden="true" className="h-6 w-px bg-gray-200" /> */}
+
+                      {/*  The commented-out button in the original code snippet seems redundant 
+          as you already have a "Create account" button inside the Menu. 
+          If you need a separate button outside the menu, uncomment and adjust it. */}
+                      {/* <Button 
+        onClick={handleOpen} 
+        className="text-sm font-medium text-gray-700 hover:text-gray-800"
+      >
+        Create account 
+      </Button> */}
+                    </div>
+                  )}
                 </div>
 
                 <div className="hidden lg:ml-8 lg:flex">
@@ -536,8 +559,9 @@ const Navigation = () => {
           </div>
         </nav>
       </header>
+
+      <AuthModal open={openAuthModal} handleClose={handleClose} />
     </div>
   );
 };
 export default Navigation;
-
