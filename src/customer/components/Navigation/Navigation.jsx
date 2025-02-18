@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -19,10 +19,13 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import AuthModal from "../../Auth/AuthModal";
-import { Avatar,AvatarIcon,Menu,MenuButton } from "@mui/material";
+import { Avatar,  Menu,MenuItem } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { deepPurple } from "@mui/material/colors";
+import { getUser, logout } from "../../../State/Auth/Action";
 
 export const navigation = {
   categories: [
@@ -163,6 +166,9 @@ const Navigation = () => {
 
   const openUserMenu = Boolean(anchorE1);
   const jwt = localStorage.getItem("jwt");
+  const { auth } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   const handleUserClick = (event) => {
     setAnchorE1(event.currentTarget);
@@ -181,12 +187,37 @@ const Navigation = () => {
   };
   const closePanel = () => {
     // Your logic here
+    // setOpenAuthModal(false)
   };
 
   const handleCategoryClick = (category, section, item, closePanel) => {
     navigate(`/${category.id}/${section.id}/${item.id}/`);
     closePanel();
   };
+
+  useEffect(() => {
+    if (jwt) {
+      // console.log("User from navigation",auth.user);
+      dispatch(getUser(jwt));
+    }
+  }, [jwt, auth.jwt]);
+
+  useEffect(() => {
+    if (auth.user) {
+      // dispatch(getUser(jwt))
+      handleClose();
+    }
+
+    if (location.pathname === "/login" || location.pathname === "/register") {
+      navigate("/");
+    }
+  }, [auth.user]);
+
+
+  const handleLogout = () => {
+    dispatch(logout());
+    handleCloseUserMenu();
+  }
 
   return (
     <div className="bg-white z-50">
@@ -473,45 +504,44 @@ const Navigation = () => {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  {true ? (
+                  {auth.user?.firstName ? (
+                    <div>
+                      <Avatar
+                        className="text-white"
+                        onClick={handleUserClick}
+                        aria-controls={open ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        sx={{
+                          bgcolor: deepPurple[500],
+                          color: "white",
+                          cursor: "pointer",
+                        }}
+                      >{auth.user?.firstName[0].toUpperCase()}</Avatar>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorE1}
+                        open={openUserMenu}
+                        onClose={handleCloseUserMenu}
+                        MenuListProps={{
+                          "aria-labelledby": "basic-button",
+                        }}
+                      >
+                          <MenuItem onClick={handleCloseUserMenu}>Profile</MenuItem>
+                          <MenuItem onClick={()=>navigate("/account/orders")}>My Orders</MenuItem>
+                           <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                       
+                      </Menu>
+                     
+                    
+                    </div>
+                  ) : (
                     <Button
                       onClick={handleOpen}
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
                     >
                       Sign in
                     </Button>
-                  ) : (
-                    <div>
-                      <Avatar>
-                        <AvatarIcon />{" "}
-                        {/* Assuming AvatarIcon is defined elsewhere */}
-                      </Avatar>
-                      <Menu>
-                        <MenuButton>
-                          <Button>Create account</Button>
-                        </MenuButton>
-                        {/* You can add more MenuItems here if needed */}
-                        {/* Example: 
-        <MenuItem>
-          <Button>Profile</Button>
-        </MenuItem>
-        <MenuItem>
-          <Button>Settings</Button>
-        </MenuItem> */}
-                      </Menu>
-                      {/* You can add other elements here as well, like a divider: */}
-                      {/* <span aria-hidden="true" className="h-6 w-px bg-gray-200" /> */}
-
-                      {/*  The commented-out button in the original code snippet seems redundant 
-          as you already have a "Create account" button inside the Menu. 
-          If you need a separate button outside the menu, uncomment and adjust it. */}
-                      {/* <Button 
-        onClick={handleOpen} 
-        className="text-sm font-medium text-gray-700 hover:text-gray-800"
-      >
-        Create account 
-      </Button> */}
-                    </div>
                   )}
                 </div>
 

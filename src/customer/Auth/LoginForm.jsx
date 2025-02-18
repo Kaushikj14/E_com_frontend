@@ -1,11 +1,18 @@
 import { Button } from '@headlessui/react';
 import { Grid, TextField } from '@mui/material';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { getUser, register,login } from '../../State/Auth/Action';
+import { useDispatch } from 'react-redux';
 
 const LoginForm = () => {
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -13,11 +20,12 @@ const LoginForm = () => {
     // console.log(data);
 
     const userData = {
-      firstName: data.get('firstName'),
-      lastName: data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
     }
+
+
+    dispatch(login(userData));
     console.log("userData",userData);
     // console.log(e.target.name.value);
 
