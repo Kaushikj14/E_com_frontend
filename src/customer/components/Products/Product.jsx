@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -31,7 +31,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { useLocation } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 
 const sortOptions = [
   { name: "Price: Low to High", href: "#", current: false },
@@ -47,6 +47,21 @@ export default function Product() {
 
   const location = useLocation();
   const navigate  = useNavigate();
+
+  const param = useParams();
+
+
+  const decodedQueryString = decodeURIComponent(location.search);
+  const searchParams = new URLSearchParams(decodedQueryString);
+  const colorValue = searchParams.get("color");
+  const sizeValue = searchParams.get("size");
+  const priceValue = searchParams.get("price");
+  const discount = searchParams.get("discount");
+  const sortValue = searchParams.get("sort");
+  const pageNumber = searchParams.get("page");
+  const stock = searchParams.get("stock");
+
+
 
   const handleFilter = (value, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
@@ -78,6 +93,15 @@ export default function Product() {
     const query = searchParams.toString();
     navigate(`?${query}`);
   }
+
+  useEffect(()=>{
+    
+    const [minPrice,maxPrice] = priceValue===null?[0,0]:priceValue.split("-").map(Number);
+
+
+  },[param.levelThree,colorValue,sizeValue,priceValue,discount,sortValue,pageNumber,stock])
+
+
 
   return (
     <div className="bg-white">
