@@ -32,6 +32,8 @@ import {
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useLocation, useParams } from 'react-router';
+import { useDispatch } from "react-redux";
+import { findProducts } from "../../../State/Product/Action";
 
 const sortOptions = [
   { name: "Price: Low to High", href: "#", current: false },
@@ -49,6 +51,7 @@ export default function Product() {
   const navigate  = useNavigate();
 
   const param = useParams();
+  const dispatch = useDispatch();
 
 
   const decodedQueryString = decodeURIComponent(location.search);
@@ -97,6 +100,22 @@ export default function Product() {
   useEffect(()=>{
     
     const [minPrice,maxPrice] = priceValue===null?[0,0]:priceValue.split("-").map(Number);
+
+    const data = {
+      category:param.levelThree,
+      colors:colorValue || [], 
+      sizes:sizeValue || [],
+      minPrice,
+      maxPrice,
+      minDiscount:discount || 0,
+      sort:sortValue || "price_low",
+      pageNumber:Math.max(0, pageNumber - 1) ,
+      pageSize:10,
+      stock:stock ,
+    }
+
+    dispatch(findProducts(data));
+
 
 
   },[param.levelThree,colorValue,sizeValue,priceValue,discount,sortValue,pageNumber,stock])
@@ -464,7 +483,7 @@ export default function Product() {
                 {/* <ProductCard /> */}
                 <div className="flex flex-wrap justify-center bg-white py-5">
                   {mens_kurta.map((item) => (
-                    <ProductCard product={item} />
+                    <ProductCard key={item.id}  product={item} />
                   ))}
                 </div>
                 {/* Your content */}
