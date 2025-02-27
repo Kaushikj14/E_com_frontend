@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { StarIcon } from "@heroicons/react/20/solid";
 import Rating from "@mui/material/Rating";
 import { Radio, RadioGroup } from "@headlessui/react";
@@ -6,7 +6,10 @@ import { Box, Button, Grid, LinearProgress } from "@mui/material";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurta } from "../../../Data/mens_kurta";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { findProductsById } from "../../../State/Product/Action";
+import { addItemToCart } from "../../../State/Cart/Action";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -67,14 +70,36 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  // const [selectedColor, setSelectedColor] = useState();
+  const [selectedSize, setSelectedSize] = useState("");
   const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { products } = useSelector((store) => store);
 
-  const handleAddToCart = ()=>{
-      navigate("/cart");
-  }
 
+  // console.log("product from productDetails.jsx file ",products.product);
+  
+
+  const handleAddToCart = () => {
+    const data = { productId: params.productId, size: selectedSize.name };
+    console.log("Adding to cart:", data);
+    dispatch(addItemToCart(data));
+    navigate("/cart");
+  };
+  
+  // const handleAddToCart = ()=>{
+  //   const data = {productId:params.productId,size:selectedSize.name};
+  //     dispatch(addItemToCart(data));
+  //     console.log("data ---",data);
+      
+  //     navigate("/cart");
+  // }
+
+  useEffect(()=>{
+    const data = {productId:params.productId};
+    dispatch(findProductsById(data));
+  },[params.productId]);
 
 
   return (
@@ -124,8 +149,8 @@ export default function ProductDetails() {
           <div className="flex flex-col items-center">
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
-                alt={product.images[0].alt}
-                src={product.images[0].src}
+                alt={products.product.imageUrl}
+                src={products.product?.imageUrl}
                 className="hidden size-full rounded-lg object-cover lg:block"
               />
             </div>
@@ -161,10 +186,10 @@ export default function ProductDetails() {
           <div className="lg:col-span-1 max-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2 ">
               <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
-                UniversalOutfit
+                {products.product?.brand}
               </h1>
               <h1 className="text-lg lg:text-xl text-gray-900 opacity-60 pt-1">
-                {product.name}
+                {products.product?.title}
               </h1>
             </div>
 
@@ -172,9 +197,9 @@ export default function ProductDetails() {
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className=" font-semibold">₹199</p>
-                <p className="opacity-50 line-through">₹211 </p>
-                <p className="text-green-600 font-semibold">5% Off </p>
+                <p className=" font-semibold">₹{products.product?.discountedPrice}</p>
+                <p className="opacity-50 line-through">₹{products.product?.price} </p>
+                <p className="text-green-600 font-semibold">{products.product?.discountPercent}% Off </p>
               </div>
 
               {/* Reviews */}
@@ -193,7 +218,7 @@ export default function ProductDetails() {
                 </div>
               </div>
 
-              <form className="mt-10">
+              <form  className="mt-10">
                 {/* Sizes */}
                 <div className="mt-10">
                   <div className="flex items-center justify-between">
@@ -253,7 +278,7 @@ export default function ProductDetails() {
                 {/* #9155fd */}
                 <div className="pt-6">
                   <Button
-                    onClick={handleAddToCart()}
+                    onClick={handleAddToCart}
                     variant="contained"
                     sx={{ px: "2rem", py: "1rem", bgcolor: "#9155fd" }}
                   >

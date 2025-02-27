@@ -19,7 +19,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import  { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { mens_kurta } from "../../../Data/mens_kurta";
 import ProductCard from "./ProductCard";
 import { filters, singleFilter } from "./FilterData";
@@ -31,10 +31,10 @@ import {
   RadioGroup,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { useLocation, useParams } from 'react-router';
-import { useDispatch } from "react-redux";
+import { useLocation, useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import { findProducts } from "../../../State/Product/Action";
-
+import { Pagination } from "@mui/material";
 const sortOptions = [
   { name: "Price: Low to High", href: "#", current: false },
   { name: "Price: High to Low", href: "#", current: false },
@@ -48,10 +48,13 @@ export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const location = useLocation();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
   const param = useParams();
   const dispatch = useDispatch();
+  const { products } = useSelector((store) => store);
+
+  // console.log("product from product.jsx file ",product);
 
 
   const decodedQueryString = decodeURIComponent(location.search);
@@ -64,12 +67,17 @@ export default function Product() {
   const pageNumber = searchParams.get("page");
   const stock = searchParams.get("stock");
 
-
+  const handlePaginationChange = (event, value) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", value);
+    const query = searchParams.toString();
+    navigate({ search: `?${query}` });
+  };
 
   const handleFilter = (value, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
     let filterValue = searchParams.getAll(sectionId);
-  
+
     if (filterValue.length > 0 && filterValue[0].split(",").includes(value)) {
       // Remove the value if already present
       filterValue = filterValue[0].split(",").filter((item) => item !== value);
@@ -77,50 +85,55 @@ export default function Product() {
       // Add value if not present
       filterValue.push(value);
     }
-  
+
     // Update or delete the filter from the URL params
     if (filterValue.length > 0) {
       searchParams.set(sectionId, filterValue.join(","));
     } else {
       searchParams.delete(sectionId);
     }
-  
+
     const query = searchParams.toString();
     navigate(`?${query}`);
   };
 
-  const handleRadioFilterChange = (e,sectionId)=>{
+  const handleRadioFilterChange = (e, sectionId) => {
     const searchParams = new URLSearchParams(location.search);
-    searchParams.set(sectionId,e.target.value);
+    searchParams.set(sectionId, e.target.value);
 
     const query = searchParams.toString();
     navigate(`?${query}`);
-  }
+  };
 
-  useEffect(()=>{
-    
-    const [minPrice,maxPrice] = priceValue===null?[0,0]:priceValue.split("-").map(Number);
+  useEffect(() => {
+    const [minPrice, maxPrice] =
+      priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
 
     const data = {
-      category:param.levelThree,
-      colors:colorValue || [], 
-      sizes:sizeValue || [],
+      category: param.levelThree,
+      colors: colorValue ? colorValue.split(",") : [], // Convert to array
+      sizes: sizeValue ? sizeValue.split(",") : [], // Convert to array
       minPrice,
       maxPrice,
-      minDiscount:discount || 0,
-      sort:sortValue || "price_low",
-      pageNumber:Math.max(0, pageNumber - 1) ,
-      pageSize:10,
-      stock:stock ,
-    }
+      minDiscount: discount || 0,
+      sort: sortValue || "price_low",
+      pageNumber: Math.max(0, pageNumber - 1),
+      pageSize: 1,
+      stock: stock || "in_stock",
+    };
 
+    console.log("API Request Payload: ", data);
     dispatch(findProducts(data));
-
-
-
-  },[param.levelThree,colorValue,sizeValue,priceValue,discount,sortValue,pageNumber,stock])
-
-
+  }, [
+    param.levelThree,
+    colorValue,
+    sizeValue,
+    priceValue,
+    discount,
+    sortValue,
+    pageNumber,
+    stock,
+  ]);
 
   return (
     <div className="bg-white">
@@ -188,7 +201,7 @@ export default function Product() {
                             <div className="flex h-5 shrink-0 items-center">
                               <div className="group grid size-4 grid-cols-1">
                                 <input
-                                // onChange={()=>handleFilter(option.value,section.id)}
+                                  // onChange={()=>handleFilter(option.value,section.id)}
                                   defaultValue={option.value}
                                   id={`filter-mobile-${section.id}-${optionIdx}`}
                                   name={`${section.id}[]`}
@@ -341,7 +354,9 @@ export default function Product() {
                               <div className="flex h-5 shrink-0 items-center">
                                 <div className="group grid size-4 grid-cols-1">
                                   <input
-                                  onChange={() => handleFilter(option.value, section.id)}
+                                    onChange={() =>
+                                      handleFilter(option.value, section.id)
+                                    }
                                     defaultValue={option.value}
                                     defaultChecked={option.checked}
                                     id={`filter-${section.id}-${optionIdx}`}
@@ -423,7 +438,9 @@ export default function Product() {
                               {section.options.map((option, optionIdx) => (
                                 <>
                                   <FormControlLabel
-                                    onChange={(e)=>handleRadioFilterChange(e,section.id)}
+                                    onChange={(e) =>
+                                      handleRadioFilterChange(e, section.id)
+                                    }
                                     value={option.value}
                                     control={<Radio />}
                                     label={option.label}
@@ -482,12 +499,29 @@ export default function Product() {
               <div className="lg:col-span-4 w-full">
                 {/* <ProductCard /> */}
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {mens_kurta.map((item) => (
-                    <ProductCard key={item.id}  product={item} />
-                  ))}
+                  {/* change here product.products && product.products?.content? instead of men's kurtA */}
+                  {products?.products?.content?.length > 0 ? (
+                    products.products.content.map((item) => (
+                      <ProductCard key={item.id} product={item} />
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500">
+                      No products found
+                    </p>
+                  )}
                 </div>
                 {/* Your content */}
               </div>
+            </div>
+          </section>
+
+          <section className="w-full px=[3.6rem]">
+            <div className="px-4 py-5 flex justify-center">
+              <Pagination
+                count={products.products?.totalPages}
+                onChange={handlePaginationChange}
+                color="secondary"
+              />
             </div>
           </section>
         </main>
