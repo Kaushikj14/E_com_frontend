@@ -10,6 +10,7 @@ import Checkout from './customer/components/Checkout/checkout.jsx';
 import Order from './customer/components/Order/Order.jsx';
 import OrderDetails from './customer/components/Order/OrderDetails.jsx';
 import { Route, Routes } from 'react-router-dom';
+import PaymentSuccess from './customer/Payment/PaymentSuccess.jsx';
 function App() {
   return (
     <div className="">
@@ -29,6 +30,8 @@ function App() {
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/account/order' element={<Order />}></Route>
             <Route path='/account/order/:orderId' element={<OrderDetails />}></Route>
+            <Route path='/payment/:orderId' element={<PaymentSuccess />}></Route>
+
 
 
 
