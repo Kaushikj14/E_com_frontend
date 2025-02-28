@@ -11,14 +11,19 @@ import Order from './customer/components/Order/Order.jsx';
 import OrderDetails from './customer/components/Order/OrderDetails.jsx';
 import { Route, Routes } from 'react-router-dom';
 import PaymentSuccess from './customer/Payment/PaymentSuccess.jsx';
+import AdminRouters from './Routers/AdminRouters.jsx';
+import CustomerRoutes from './Routers/CustomerRoutes.jsx';
 function App() {
   return (
     <div className="">
-        <Navigation />
+        {/* <Navigation /> */}
       
-      <Routes>
+      <Routes>  
+
+      <Route path="/*" element={<CustomerRoutes />}></Route>
+            <Route path="/admin/*" element={<AdminRouters />}></Route>
       
-            <Route path='/login' element={<HomePage />}></Route>
+            {/* <Route path='/login' element={<HomePage />}></Route>
             <Route path='/register' element={<HomePage />}></Route>
 
 
@@ -30,7 +35,7 @@ function App() {
             <Route path='/checkout' element={<Checkout />}></Route>
             <Route path='/account/order' element={<Order />}></Route>
             <Route path='/account/order/:orderId' element={<OrderDetails />}></Route>
-            <Route path='/payment/:orderId' element={<PaymentSuccess />}></Route>
+            <Route path='/payment/:orderId' element={<PaymentSuccess />}></Route> */}
 
 
 
@@ -38,9 +43,7 @@ function App() {
 
 
       </Routes>
-      <div>
-        <Footer />
-      </div>
+      
     </div>
   );
 }
