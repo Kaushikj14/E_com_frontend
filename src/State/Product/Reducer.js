@@ -48,7 +48,7 @@
 //     }
 
 // }
-import { FIND_PRODUCT_BY_ID_FAILURE, FIND_PRODUCT_BY_ID_REQUEST, FIND_PRODUCT_BY_ID_SUCCESS, FIND_PRODUCTS_FAILURE, FIND_PRODUCTS_REQUEST, FIND_PRODUCTS_SUCCESS } from "./ActionType";
+import { DELETE_PRODUCT_SUCCESS, FIND_PRODUCT_BY_ID_FAILURE, FIND_PRODUCT_BY_ID_REQUEST, FIND_PRODUCT_BY_ID_SUCCESS, FIND_PRODUCTS_FAILURE, FIND_PRODUCTS_REQUEST, FIND_PRODUCTS_SUCCESS } from "./ActionType";
 
 const initialState = {
     products: [],
@@ -84,6 +84,16 @@ export const customerProductReducer = (state = initialState, action) => {
                 error: null,
                 loading: false,
             };
+
+
+        case DELETE_PRODUCT_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                error:null,
+                deletedProducts: action.payload
+            }
+            
 
         case FIND_PRODUCTS_FAILURE:
         case FIND_PRODUCT_BY_ID_FAILURE:

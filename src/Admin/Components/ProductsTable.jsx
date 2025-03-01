@@ -1,57 +1,76 @@
-import { Table, TableCell, TableContainer, TableHead, TableRow,TableBody, Paper } from '@mui/material'
-import React, { useEffect } from 'react'
-import { findProducts } from '../../State/Product/Action';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableBody,
+  Paper,
+  Avatar,
+  Button,
+  Card,
+  CardHeader,
+} from "@mui/material";
+import React, { useEffect } from "react";
+import { deleteProduct, findProducts } from "../../State/Product/Action";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductsTable = () => {
+  const dispatch = useDispatch();
+  const { products } = useSelector((store) => store);
 
-    const dispatch = useDispatch();
-    const {products} = useSelector(store=>store);
+  console.log("products", products);
 
-    console.log("products",products);
 
-    useEffect(()=>{
-        const data = {
-            //   category: "mens_kurta",
-            //   colors:  [], // Convert to array
-            //   sizes:  [], // Convert to array
-            //   minPrice:0,
-            //   maxPrice:100000000,
-            //   minDiscount: 0,
-            //   sort:  "price_low",
-            //   pageNumber:  2,
-            //   pageSize: 10,
-            //   stock: "",
-            category: "mens_kurta",
-            colors:  [], // Convert to array
-            sizes:  [], // Convert to array
-            minPrice:0,
-            maxPrice:1000000,
-            minDiscount:  0,
-            sort:  "price_low",
-            pageNumber: 0,
-            pageSize: 10,
-            stock: "in_stock",
-            };
-        
-            console.log("API Request Payload: ", data);
-            dispatch(findProducts(data));
-          
-    },[]);
+  const handleProductDelete = (productId)=>{
+    dispatch(deleteProduct(productId));
+  }
+
+  useEffect(() => {
+    const data = {
+      //   category: "mens_kurta",
+      //   colors:  [], // Convert to array
+      //   sizes:  [], // Convert to array
+      //   minPrice:0,
+      //   maxPrice:100000000,
+      //   minDiscount: 0,
+      //   sort:  "price_low",
+      //   pageNumber:  2,
+      //   pageSize: 10,
+      //   stock: "",
+      category: "mens_kurta",
+      colors: [], // Convert to array
+      sizes: [], // Convert to array
+      minPrice: 0,
+      maxPrice: 1000000,
+      minDiscount: 0,
+      sort: "price_low",
+      pageNumber: 0,
+      pageSize: 5,
+      stock: "in_stock",
+    };
+
+    console.log("API Request Payload: ", data);
+    dispatch(findProducts(data));
+  }, [products.deletedProducts]);
   return (
-    <div>
-        <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    <div className="p-5 w-[full]">
+      <Card className="mt-2" >
+        <CardHeader title="ALL Products" />
+        <TableContainer component={Paper} sx={{ width: "100%", overflowX: "hidden" }}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Image</TableCell>
+                <TableCell align="left">Title</TableCell>
+                <TableCell align="left">Category</TableCell>
+                <TableCell align="left">Price</TableCell>
+                <TableCell align="left">Quanity</TableCell>
+
+                <TableCell align="left">Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            {/* <TableBody>
           {products.products?.content.map((item) => (
             <TableRow
               key={item.category?.name}
@@ -64,13 +83,42 @@ const ProductsTable = () => {
               {/* <TableCell align="right">{}</TableCell>
               <TableCell align="right">{}</TableCell>
               <TableCell align="right">{}</TableCell> */}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </div>
-  )
-}
+            {/* </TableRow> */}
+            {/* ))} */}
+            {/* </TableBody> */}
+            <TableBody>
+              {products?.products?.content?.length > 0 ? (
+                products.products.content.map((item) => (
+                  <TableRow key={item?.id}>
+                    <TableCell align="left">
+                      <Avatar src={item.imageUrl}></Avatar>
+                    </TableCell>
+                    <TableCell align="left" scope="row">
+                      {item?.title}
+                    </TableCell>
 
-export default ProductsTable
+                    <TableCell align="left">{item?.category.name}</TableCell>
+                    <TableCell align="left">{item?.price}</TableCell>
+                    <TableCell align="left">{item?.quantity}</TableCell>
+
+                    <TableCell align="left">
+                      <Button onClick={()=>handleProductDelete(item?.id)} variant="outlined">Delete</Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    No products available
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+    </div>
+  );
+};
+
+export default ProductsTable;
