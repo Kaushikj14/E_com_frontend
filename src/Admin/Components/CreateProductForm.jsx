@@ -128,6 +128,8 @@ const CreateProductForm = () => {
                 <MenuItem value="t-shirts">T-Shirts</MenuItem>
                 <MenuItem value="saree">Saree</MenuItem>
                 <MenuItem value="lengha_choli">Lenhenga-choli</MenuItem>
+                <MenuItem value="mens_kurta">Men's Kurta</MenuItem>
+
               </Select>
             </FormControl>
           </Grid>
